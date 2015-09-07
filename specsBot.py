@@ -49,22 +49,30 @@ class specsBot(daemon):
                         del self.db[msg.chat]
                     except (ValueError, IndexError) as e:
                         self.bot.send_message(
-                            msg.chat, "invalid coice" + str(e),
+                            msg.chat, "invalid choice " + str(e),
                             reply_markup=specsBot.replykeyboard,
                             reply_to_message_id=msg.message_id
                         )
                 else:
                     # TODO: check injection vulnerability
                     products = self.dsf.searchForProducts(msg.text)
-                    text = "found %d products\n" % len(products)
+                    text = "found %d products\n\n" % len(products)
                     for i, p in enumerate(products):
-                        text += "%s %s\n" % (specsBot.numbers[i + 1],
-                                             p["displayName"])
-                    self.bot.send_message(msg.chat, text,
-                                          reply_markup=specsBot.replykeyboard,
-                                          reply_to_message_id=msg.message_id)
-                    self.db[msg.chat] = {"state": "choosing product",
-                                         "products": products}
+                        text += "%s %s\n\n" % (specsBot.numbers[i + 1],
+                                               p["displayName"])
+                    if len(products) > 0:
+                        self.db[msg.chat] = {"state": "choosing product",
+                                             "products": products}
+                        self.bot.send_message(
+                            msg.chat, text,
+                            reply_markup=specsBot.replykeyboard,
+                            reply_to_message_id=msg.message_id
+                        )
+                    else:
+                        self.bot.send_message(
+                            msg.chat, text,
+                            reply_to_message_id=msg.message_id
+                        )
 
     def run(self):
         try:
@@ -74,8 +82,8 @@ class specsBot(daemon):
             """
             Setup the bot
             """
-            self.bot = TelegramBot(self.settings["apiKey"])
-            self.dsf = DatasheetFinder("p69bn6eddxvtnpj6eqz7ecgr")
+            self.bot = TelegramBot(self.settings["tg-apiKey"])
+            self.dsf = DatasheetFinder(self.settings["el14-apiKey"])
             self.bot.update_bot_info().wait()
             self.db = {}
             logging.info("username is %s" % self.bot.username)

@@ -23,6 +23,9 @@ class DatasheetFinder:
         }
         r = requests.get(apiUrl, params=params)
 
-        products = r.json()["keywordSearchReturn"]["products"]
+        searchReturn = r.json()["keywordSearchReturn"]
 
-        return products
+        if searchReturn["numberOfResults"] == 0:
+            return []
+
+        return searchReturn["products"]
