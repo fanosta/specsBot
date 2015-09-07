@@ -5,7 +5,7 @@ I am a TelegramBot that can send you pdf datasheets for electronic parts.
 
 #using it
 you have to add `settings.json` file with following content
-```
+```json
 {
     "tg-apiKey": "nnnnnnnnn:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     "el14-apikey": "xxxxxxxxxxxxxxxxxxxxxxxx"
