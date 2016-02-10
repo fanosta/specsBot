@@ -13,7 +13,7 @@ from datasheetFinder import DatasheetFinder
 logging.basicConfig(filename='specsbot.log', level=logging.INFO)
 
 
-class specsBot(daemon):
+class specsBot():
 
     numbers = ["\u0030\u20E3", "\u0031\u20E3", "\u0032\u20E3", "\u0033\u20E3",
                "\u0034\u20E3", "\u0035\u20E3", "\u0036\u20E3", "\u0037\u20E3",
@@ -112,22 +112,8 @@ class specsBot(daemon):
 
 
 def main():
-    daemon = specsBot('/tmp/daemon-specsbot.pid')
-    if len(sys.argv) == 2:
-            if 'start' == sys.argv[1]:
-                    daemon.start()
-            elif 'stop' == sys.argv[1]:
-                    daemon.stop()
-            elif 'restart' == sys.argv[1]:
-                    daemon.restart()
-            else:
-                    print("Unknown command")
-                    sys.exit(2)
-            sys.exit(0)
-    else:
-            print("usage: %s start|stop|restart" % sys.argv[0])
-            sys.exit(2)
-
+    daemon = specsBot()
+    daemon.run()
 
 if __name__ == "__main__":
     main()
