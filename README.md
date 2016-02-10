@@ -8,6 +8,6 @@ you have to add `settings.json` file with following content
 ```json
 {
     "tg-apiKey": "nnnnnnnnn:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    "el14-apikey": "xxxxxxxxxxxxxxxxxxxxxxxx"
+    "el14-apiKey": "xxxxxxxxxxxxxxxxxxxxxxxx"
 }
 ```
