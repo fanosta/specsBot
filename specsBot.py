@@ -74,6 +74,20 @@ class specsBot():
                             reply_to_message_id=msg.message_id
                         )
 
+    def get_updates_cont(self):
+        """
+        Get updates sent to the bot
+        """
+        currentUpdateId = 0
+        while True:
+            updates = self.bot.get_updates(offset=currentUpdateId).wait()
+            for update in updates:
+                print(update)
+                if update:
+                    currentUpdateId = update.update_id + 1
+                    yield update
+            time.sleep(0.5)
+
     def run(self):
         try:
             json_data = open("settings.json").read()
@@ -88,29 +102,11 @@ class specsBot():
             self.db = {}
             logging.info("username is %s" % self.bot.username)
 
-            currentUpdateId = 0
-            while True:
-                """
-                Get updates sent to the bot
-                """
-                #logging.debug("currentUpdateId: " + str(currentUpdateId))
-                updates = self.bot.get_updates(offset=currentUpdateId).wait()
-                if updates:
-                    logging.debug("received %d updates", len(updates))
-                for update in updates:
-                    logging.debug(update)
-                    if update:
-                        currentUpdateId = update.update_id + 1
-                    self.handleUpdate(update)
-                time.sleep(0.100)
-        except:
-            logging.critical("exception occoured - stopping")
-            info = sys.exc_info()
-            logging.critical(info)
-            logging.critical(traceback.extract_stack(info[2]))
-        finally:
-            logging.info("closing db")
-            self.db.close()
+            for update in self.get_updates_cont():
+                self.handleUpdate(update)
+
+        except KeyboardInterrupt:
+            logging.info("halting due to KeyboardInterrupt")
 
 
 def main():
