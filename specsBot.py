@@ -10,7 +10,7 @@ from twx.botapi import ReplyKeyboardMarkup
 from daemon import daemon
 from datasheetFinder import DatasheetFinder
 
-logging.basicConfig(filename='specsbot.log', level=logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
 
 class specsBot():
@@ -93,14 +93,16 @@ class specsBot():
                 """
                 Get updates sent to the bot
                 """
-                logging.debug("currentUpdateId: " + str(currentUpdateId))
+                #logging.debug("currentUpdateId: " + str(currentUpdateId))
                 updates = self.bot.get_updates(offset=currentUpdateId).wait()
-                logging.debug("received %d updates", len(updates))
+                if updates:
+                    logging.debug("received %d updates", len(updates))
                 for update in updates:
                     logging.debug(update)
-                    currentUpdateId = update.update_id + 1
+                    if update:
+                        currentUpdateId = update.update_id + 1
                     self.handleUpdate(update)
-                time.sleep(1)
+                time.sleep(0.100)
         except:
             logging.critical("exception occoured - stopping")
             info = sys.exc_info()
